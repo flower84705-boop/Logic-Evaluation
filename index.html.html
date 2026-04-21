@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15分鐘邏輯挑戰</title>
+    <style>
+        body { font-family: "Microsoft JhengHei", sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 20px; }
+        #quiz-card { background: white; width: 100%; max-width: 500px; padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .header { display: flex; justify-content: space-between; color: #666; margin-bottom: 15px; font-size: 0.9rem; }
+        #timer { color: #e44d26; font-weight: bold; }
+        .q-text { font-size: 1.2rem; margin-bottom: 20px; line-height: 1.5; color: #333; }
+        .btn { display: block; width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; background: #fff; cursor: pointer; text-align: left; font-size: 1rem; transition: 0.2s; }
+        .btn:hover { background: #f0f7ff; border-color: #007bff; }
+        .hidden { display: none; }
+        .result-box { line-height: 1.6; }
+        .res-item { border-bottom: 1px solid #eee; padding: 10px 0; font-size: 0.9rem; }
+        .tag-right { color: #28a745; font-weight: bold; }
+        .tag-wrong { color: #dc3545; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div id="quiz-card">
+    <div id="game-ui">
+        <div class="header">
+            <span id="progress">題目 1 / 10</span>
+            <span id="timer">剩餘時間 15:00</span>
+        </div>
+        <div class="q-text" id="q-content">正在加載題目...</div>
+        <div id="options"></div>
+    </div>
+
+    <div id="result-ui" class="hidden">
+        <h2 style="text-align: center;">測驗結果</h2>
+        <div id="score-text" style="font-size: 1.2rem; text-align: center; margin-bottom: 20px;"></div>
+        <div id="details"></div>
+        <button onclick="location.reload()" class="btn" style="text-align:center; background:#007bff; color:white; margin-top:20px;">重新挑戰</button>
+    </div>
+</div>
+
+<script>
+const quizData = [
+    {q: "2, 6, 12, 20, 30, ?", o: ["38", "40", "42", "46"], a: 2, n: "規律為：+4, +6, +8, +10, +12。"},
+    {q: "3, 5, 9, 17, 33, ?", o: ["65", "60", "50", "48"], a: 0, n: "規律為：前一個數字乘以 2 再減 1。"},
+    {q: "若「所有的業務員都是外向的人」且「有些外向的人喜歡旅遊」，下列哪一個推論「絕對」正確？", o: ["所有的業務員都喜歡旅遊", "有些業務員喜歡旅遊", "有些喜歡旅遊的人是外向的人", "內向的人都不喜歡旅遊"], a: 2, n: "前提已知「有些外向的人喜歡旅遊」，因此推論必成立。"},
+    {q: "假設所有 A 都是 B。有些 B 是 C。則下列何者正確？", o: ["所有 A 都是 C", "有些 A 是 C", "某些 C 可能是 A", "A 與 C 絕對沒有關係"], a: 2, n: "A在B內，C與B重疊，所以C「可能」與A重疊。"},
+    {q: "甲：乙是兔子。乙：丙是狐狸。丙：甲是狼。兔子說實話/狐狸說謊/狼隨機。請問誰是兔子？", o: ["甲", "乙", "丙", "無法判斷"], a: 2, n: "若丙是兔子，則甲是狼，乙是狐狸，條件全數吻合。"},
+    {q: "如果 5 台機器在 5 分鐘內生產 5 個零件，100 台機器生產 100 個零件需要幾分鐘？", o: ["1 分鐘", "5 分鐘", "20 分鐘", "100 分鐘"], a: 1, n: "每台機器生產一個零件的速度固定是 5 分鐘。"},
+    {q: "王先生有 4 個女兒，每個女兒都有一個哥哥。請問王先生共有幾個小孩？", o: ["5 個", "8 個", "4 個", "9 個"], a: 0, n: "四個女兒共用同一個哥哥，即 4+1=5。"},
+    {q: "規定：若今天下雨則員工遠端。小張今天在辦公室上班，可以推斷出：", o: ["今天沒下雨", "今天下雨了", "小張不喜歡遠端", "以上皆非"], a: 0, n: "逆反命題：若非Q(未遠端)則非P(沒下雨)。"},
+    {q: "3x3 矩陣規律：第一列(三,圓,方)；第二列(方,三,圓)；第三列(圓,方,?)", o: ["三角形", "星形", "圓形", "梯形"], a: 0, n: "每一行每一列的形狀皆不重複。"},
+    {q: "一個時鐘在 3:15 時，時針與分針的夾角是幾度？", o: ["0 度", "7.5 度", "15 度", "22.5 度"], a: 1, n: "分針走 15 分鐘，時針會往 4 點方向移動 7.5 度。"}
+];
+
+let cur = 0;
+let userAns = [];
+let time = 15 * 60;
+
+const timer = setInterval(() => {
+    time--;
+    let m = Math.floor(time/60), s = time%60;
+    document.getElementById('timer').innerText = `剩餘時間 ${m}:${s<10?'0':''}${s}`;
+    if(time <= 0) showRes();
+}, 1000);
+
+function render() {
+    if(cur >= quizData.length) return showRes();
+    document.getElementById('progress').innerText = `題目 ${cur + 1} / 10`;
+    const d = quizData[cur];
+    document.getElementById('q-content').innerText = d.q;
+    let html = "";
+    d.o.forEach((opt, i) => {
+        html += `<button class="btn" onclick="next(${i})">${opt}</button>`;
+    });
+    document.getElementById('options').innerHTML = html;
+}
+
+function next(idx) {
+    userAns.push(idx);
+    cur++;
+    render();
+}
+
+function showRes() {
+    clearInterval(timer);
+    document.getElementById('game-ui').classList.add('hidden');
+    document.getElementById('result-ui').classList.remove('hidden');
+    let score = 0;
+    let detailHtml = "";
+    quizData.forEach((d, i) => {
+        const isRight = userAns[i] === d.a;
+        if(isRight) score++;
+        detailHtml += `<div class="res-item">
+            <b>Q${i+1}.</b> ${isRight?'<span class="tag-right">答對</span>':'<span class="tag-wrong">答錯</span>'}<br>
+            正確答案：${d.o[d.a]}<br>
+            <small style="color:#666">解析：${d.n}</small>
+        </div>`;
+    });
+    document.getElementById('score-text').innerText = `總分：${score} / 10`;
+    document.getElementById('details').innerHTML = detailHtml;
+}
+
+render();
+</script>
+
+</body>
+</html>
