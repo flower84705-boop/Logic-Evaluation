@@ -229,17 +229,17 @@
 
             <div class="q-item" data-q="23">
                 <div class="q-text">23. 根據顧問實務與專案管理經驗，下列何者「最不可能是」導致大型系統導入失敗的核心主因？</div>
-                <label class="option"><input type="radio" name="q23" value="開發團隊所使用的程式語言版本較舊"> 開發團隊所使用的程式語言版本較舊</label>
-                <label class="option"><input type="radio" name="q23" value="關鍵需求定義模糊且缺乏內部共識"> 關鍵需求定義模糊且缺乏內部共識</label>
-                <label class="option"><input type="radio" name="q23" value="專案預算的會計入帳科目分類錯誤"> 專案預算的會計入帳科目分類錯誤</label>
-                <label class="option"><input type="radio" name="q23" value="系統測試階段發現效能未達預期目標"> 系統測試階段發現效能未達預期目標</label>
+                <label class="option"><input type="radio" name="q23" value="A"> 開發團隊所使用的程式語言版本較舊</label>
+                <label class="option"><input type="radio" name="q23" value="B"> 關鍵需求定義模糊且缺乏內部共識</label>
+                <label class="option"><input type="radio" name="q23" value="C"> 專案預算的會計入帳科目分類錯誤</label>
+                <label class="option"><input type="radio" name="q23" value="D"> 系統測試階段發現效能未達預期目標</label>
             </div>
 
             <div class="q-item" data-q="24">
-                <div class="q-text">24. 若發現系統舊資料轉入錯誤率達 5%，以下哪種做法最專業？</div>
+                <div class="q-text">24. 若在系統導入的資料轉檔（Data Migration）階段，發現舊資料轉入錯誤率達 5%，以下哪種做法最專業？</div>
                 <label class="option"><input type="radio" name="q24" value="清洗檢核"> 建立清洗規則與檢核機制，並視情況修正轉檔程式</label>
-                <label class="option"><input type="radio" name="q24" value="忽略"> 5% 很少，可以忽略</label>
-                <label class="option"><input type="radio" name="q24" value="手動"> 要求使用者全部手動重新輸入</label>
+                <label class="option"><input type="radio" name="q24" value="現況轉入"> 評估資料重要性，若非關鍵欄位則採取「現況轉入」，待上線後由使用者於作業中修正</label>
+                <label class="option"><input type="radio" name="q24" value="暫停轉檔"> 暫停轉檔流程，要求業務單位在來源端（舊系統）完全釐清並補正所有錯誤資料後再重新執行</label>
             </div>
 
             <div class="q-item" data-q="25">
@@ -292,7 +292,7 @@
         q21: { ans: "拆解層次", exp: "SA 應具備分層診斷能力（網路、AP、DB、環境），不應盲目直接改程式。" },
         q22: { ans: "即時定義", exp: "即時(Real-time)在技術上有不同層次與成本，釐清規格是顧問的核心職責。" },
         q23: { ans: "C", exp: "會計科目分類屬於後勤行政範疇，不影響系統功能導入與業務邏輯之成立，其餘選項均直接影響專案成敗。" },
-        q24: { ans: "清洗檢核", exp: "專業 SA 應提出 Data Cleaning 方案並從源頭攔截錯誤。" },
+        q24: { ans: "清洗檢核", exp: "應優先以技術手段識別異常規律並修正轉檔邏輯，而非將錯誤風險後推或導致專案時程失控。" },
         q25: { ans: "優化路徑", exp: "優化 UX 核心在於簡化流程路徑並減輕使用者記憶負擔。" }
     };
 
