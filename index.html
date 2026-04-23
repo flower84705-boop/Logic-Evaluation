@@ -42,7 +42,7 @@
 
     <div id="quiz-content">
         <div class="user-info">
-            <label style="font-weight: bold;">應徵者姓名：</label>
+            <label style="font-weight: bold;">應試者姓名：</label>
             <input type="text" id="candidate-name" placeholder="請輸入姓名" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; width: 220px;">
         </div>
 
@@ -362,7 +362,7 @@
     function renderResult(name, score, correct, review) {
         document.getElementById('quiz-content').style.display = 'none';
         document.getElementById('result').style.display = 'block';
-        document.getElementById('display-name').innerText = "應徵者：" + name;
+        document.getElementById('display-name').innerText = "應試者：" + name;
         document.getElementById('final-score').innerText = score;
         document.getElementById('correct-count').innerText = correct;
         document.getElementById('review-content').innerHTML = review;
